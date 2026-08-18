@@ -1,9 +1,7 @@
-/** @type {import('postcss-load-config').Config} */
+// v4-style — correct
 const config = {
   plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
+    "@tailwindcss/postcss": {},
   },
 };
-
 export default config;
