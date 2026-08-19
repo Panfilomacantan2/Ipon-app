@@ -1,5 +1,3 @@
-// lib/actions/category.action.ts
-
 "use server";
 
 import { revalidatePath } from "next/cache";

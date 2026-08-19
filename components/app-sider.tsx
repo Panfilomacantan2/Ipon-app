@@ -6,6 +6,7 @@ import {
   Target,
   Settings,
   PiggyBank,
+  ChartBar
 } from "lucide-react";
 
 import {
@@ -40,7 +41,7 @@ const navigation = [
   {
     title: "Categories",
     href: "/categories",
-    icon: Target,
+    icon: ChartBar,
   },
   {
     title: "Savings Goals",

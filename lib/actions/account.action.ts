@@ -1,4 +1,3 @@
-// actions/accounts.ts
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
@@ -54,8 +53,4 @@ export async function createAccount(
     error: "",
     data,
   };
-
-  //     for (const [key, value] of formData.entries()) {
-  //     console.log(key, value);
-  //   }
 }
