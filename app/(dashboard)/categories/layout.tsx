@@ -5,7 +5,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-export default function AccountLayout({
+export default function CategoriesLayout({
   children,
 }: {
   children: React.ReactNode;

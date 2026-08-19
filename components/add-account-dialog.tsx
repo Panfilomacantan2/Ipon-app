@@ -27,11 +27,11 @@ import { createAccount } from "@/lib/actions/account.action";
 import { SubmitButton } from "./submit-button";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
+import { AccountActionState } from "@/lib/types/action.type";
 
-const initialState = {
+const initialState: AccountActionState = {
   success: false,
   error: "",
-  data: null,
 };
 
 export function AddAccountDialog() {
@@ -51,7 +51,6 @@ export function AddAccountDialog() {
     console.log("action state: ", state.data);
     setOpen(false);
   }, [state.data, state.success]);
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -38,6 +38,11 @@ const navigation = [
     icon: Wallet,
   },
   {
+    title: "Categories",
+    href: "/categories",
+    icon: Target,
+  },
+  {
     title: "Savings Goals",
     href: "/goals",
     icon: Target,
@@ -59,20 +64,14 @@ export function AppSidebar() {
       <SidebarHeader className="border-b">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              size="lg"
-              tooltip="Ipon"
-            >
+            <SidebarMenuButton asChild size="lg" tooltip="Ipon">
               <Link href="/dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-sm font-bold text-primary-foreground">
                   ₱
                 </div>
 
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">
-                    Ipon
-                  </span>
+                  <span className="truncate font-semibold">Ipon</span>
 
                   <span className="truncate text-xs text-muted-foreground">
                     Personal Finance
@@ -88,24 +87,17 @@ export function AppSidebar() {
       <SidebarContent>
         {/* Finance */}
         <SidebarGroup>
-          <SidebarGroupLabel>
-            Finance
-          </SidebarGroupLabel>
+          <SidebarGroupLabel>Finance</SidebarGroupLabel>
 
           <SidebarGroupContent>
             <SidebarMenu>
               {navigation.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={item.title}
-                  >
+                  <SidebarMenuButton asChild tooltip={item.title}>
                     <Link href={item.href}>
                       <item.icon />
 
-                      <span>
-                        {item.title}
-                      </span>
+                      <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -116,24 +108,17 @@ export function AppSidebar() {
 
         {/* Account */}
         <SidebarGroup>
-          <SidebarGroupLabel>
-            Account
-          </SidebarGroupLabel>
+          <SidebarGroupLabel>Account</SidebarGroupLabel>
 
           <SidebarGroupContent>
             <SidebarMenu>
               {secondaryNavigation.map((item) => (
                 <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    tooltip={item.title}
-                  >
+                  <SidebarMenuButton asChild tooltip={item.title}>
                     <Link href={item.href}>
                       <item.icon />
 
-                      <span>
-                        {item.title}
-                      </span>
+                      <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -147,18 +132,13 @@ export function AppSidebar() {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              size="lg"
-              tooltip="My Ipon"
-            >
+            <SidebarMenuButton size="lg" tooltip="My Ipon">
               <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-muted">
                 <PiggyBank className="size-4" />
               </div>
 
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">
-                  My Ipon
-                </span>
+                <span className="truncate font-medium">My Ipon</span>
 
                 <span className="truncate text-xs text-muted-foreground">
                   Personal account
