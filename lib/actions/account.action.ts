@@ -54,3 +54,42 @@ export async function createAccount(
     data,
   };
 }
+
+
+
+export async function deleteAcount(accountId: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+  }
+
+  const { error } = await supabase
+    .from("accounts")
+    .delete()
+    .eq("id", accountId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Failed to delete account:", error);
+
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+
+  revalidatePath("/(dashboard)/account");
+
+  return {
+    success: true,
+    error: "",
+  };
+}
