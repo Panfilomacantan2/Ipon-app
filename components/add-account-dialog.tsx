@@ -13,9 +13,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
-
 import { Input } from "@/components/ui/input";
-
 import { Label } from "@/components/ui/label";
 
 import {
@@ -27,10 +25,36 @@ import {
 } from "@/components/ui/select";
 import { createAccount } from "@/lib/actions/account.action";
 import { SubmitButton } from "./submit-button";
+import { useActionState, useEffect, useState } from "react";
+import { toast } from "sonner";
+
+const initialState = {
+  success: false,
+  error: "",
+  data: null,
+};
 
 export function AddAccountDialog() {
+  const [state, formAction, pending] = useActionState(
+    createAccount,
+    initialState,
+  );
+  const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (!state.data) return;
+
+    toast.success("Account created", {
+      description: "Your account has been successfully created.",
+    });
+
+    console.log("action state: ", state.data);
+    setOpen(false);
+  }, [state.data, state.success]);
+
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <Plus className="mr-2 h-4 w-4" />
@@ -48,7 +72,7 @@ export function AddAccountDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <form action={createAccount} className="space-y-5">
+        <form action={formAction} className="space-y-5">
           {/* Account Name */}
           <div className="space-y-2">
             <Label htmlFor="name">Account name</Label>

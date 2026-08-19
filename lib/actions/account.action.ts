@@ -3,8 +3,12 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
+import { AccountActionState } from "@/lib/types/action.type";
 
-export async function createAccount(formData: FormData) {
+export async function createAccount(
+  _previousState: AccountActionState,
+  formData: FormData,
+) {
   const supabase = await createClient();
 
   const {
@@ -21,7 +25,7 @@ export async function createAccount(formData: FormData) {
   const balance = Number(formData.get("balance")) || 0;
   const description = formData.get("description") as string;
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("accounts")
     .insert([
       {
@@ -33,14 +37,23 @@ export async function createAccount(formData: FormData) {
         user_id: user.id,
       },
     ])
-    .select();
-
+    .select()
+    .single();
 
   if (error) {
-    throw new Error(error.message);
+    return {
+      success: false,
+      error: error.message,
+    };
   }
 
   revalidatePath("/(dashboard)/accounts");
+
+  return {
+    success: true,
+    error: "",
+    data,
+  };
 
   //     for (const [key, value] of formData.entries()) {
   //     console.log(key, value);
