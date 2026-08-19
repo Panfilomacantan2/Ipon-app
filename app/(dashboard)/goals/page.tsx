@@ -198,7 +198,7 @@ export default async function GoalsPage() {
                       </div>
 
                       {/* Goal Actions */}
-                      <GoalActions goalId={goal.id} goalName={goal.name}/>
+                      <GoalActions goalId={goal.id} goalName={goal.name} />
                     </div>
 
                     {goal.description && (

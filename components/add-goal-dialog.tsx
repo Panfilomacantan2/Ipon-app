@@ -25,11 +25,14 @@ const initialState = {
   error: "",
 };
 
+const MAX_LENGTH = 100;
+
 export function AddGoalDialog() {
   const [open, setOpen] = useState(false);
 
   const [state, formAction, pending] = useActionState(createGoal, initialState);
   const formRef = useRef<HTMLFormElement>(null);
+  const [value, setValue] = useState("");
 
   useEffect(() => {
     if (state.success && state.data) {
@@ -87,17 +90,26 @@ export function AddGoalDialog() {
 
           {/* Description */}
           <div className="space-y-2">
-            <Label htmlFor="description">
-              Description
-              <span className="ml-1 text-muted-foreground">(optional)</span>
-            </Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description">
+                Description
+                <span className="ml-1 text-muted-foreground">(optional)</span>
+              </Label>
+
+              <span className="text-xs text-muted-foreground">
+                {value.length}/{MAX_LENGTH}
+              </span>
+            </div>
 
             <Textarea
               id="description"
               name="description"
               placeholder="e.g. Save money for unexpected expenses"
-              className="resize-none"
+              className="resize-none h-24 overflow-y-auto field-sizing-fixed"
               rows={3}
+              maxLength={MAX_LENGTH}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
             />
           </div>
 

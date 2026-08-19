@@ -19,37 +19,7 @@ import {
 
 import { AddAccountDialog } from "@/components/add-account-dialog";
 import { createClient } from "@/lib/supabase/server";
-
-const account = [
-  {
-    id: "1",
-    name: "GCash",
-    type: "E-wallet",
-    balance: 1000,
-    icon: Wallet,
-  },
-  {
-    id: "2",
-    name: "BPI Savings",
-    type: "Bank Account",
-    balance: 15000,
-    icon: Landmark,
-  },
-  {
-    id: "3",
-    name: "Cash Wallet",
-    type: "Cash",
-    balance: 2500,
-    icon: Banknote,
-  },
-  {
-    id: "4",
-    name: "BDO Credit Card",
-    type: "Credit Card",
-    balance: -3500,
-    icon: CreditCard,
-  },
-];
+import { AcountActions } from "@/components/account-action";
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat("en-PH", {
@@ -57,6 +27,8 @@ function formatCurrency(amount: number) {
     currency: "PHP",
   }).format(amount);
 }
+
+
 
 export default async function AccountsPage() {
   const supabase = await createClient();
@@ -74,7 +46,6 @@ export default async function AccountsPage() {
     .from("accounts")
     .select("*")
     .eq("user_id", user.id);
-
 
   if (error) {
     console.log(error);
@@ -201,28 +172,9 @@ export default async function AccountsPage() {
                       </Badge>
                     </div>
                   </div>
-
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
-                        <MoreHorizontal className="h-4 w-4" />
-
-                        <span className="sr-only">Account actions</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit account</DropdownMenuItem>
-
-                      <DropdownMenuItem>View transactions</DropdownMenuItem>
-
-                      <DropdownMenuSeparator />
-
-                      <DropdownMenuItem className="text-destructive">
-                        Delete account
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                    
+                  {/* Acount Actions */}
+                  <AcountActions acountId={account.id} acountName={account.name}/>
                 </CardHeader>
 
                 <CardContent>

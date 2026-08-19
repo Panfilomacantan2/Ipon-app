@@ -70,3 +70,42 @@ export async function createCategory(
     data,
   };
 }
+
+
+
+export async function deleteCategory(categoryId: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+  }
+
+  const { error } = await supabase
+    .from("categories")
+    .delete()
+    .eq("id", categoryId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Failed to delete category")
+
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+
+  revalidatePath("/(dashboard)/categories");
+
+  return {
+    success: true,
+    error: "",
+  };
+}

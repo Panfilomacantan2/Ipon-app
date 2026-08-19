@@ -1,8 +1,6 @@
 import {
   ArrowDownRight,
   ArrowUpRight,
-  MoreHorizontal,
-  Plus,
   Tags,
   Utensils,
   Car,
@@ -17,23 +15,11 @@ import {
 } from "lucide-react";
 
 import { createClient } from "@/lib/supabase/server";
-
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 import { Badge } from "@/components/ui/badge";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 import { AddCategoryDialog } from "@/components/add-category-dialog";
+import { CategoryActions } from "@/components/category-action";
 
 const iconMap = {
   Utensils,
@@ -261,28 +247,11 @@ function CategoryGrid({ categories }: { categories: any[] }) {
                 </div>
               </div>
 
-              {/* Actions */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <MoreHorizontal className="h-4 w-4" />
-
-                    <span className="sr-only">Category actions</span>
-                  </Button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Edit category</DropdownMenuItem>
-
-                  <DropdownMenuItem>View transactions</DropdownMenuItem>
-
-                  <DropdownMenuSeparator />
-
-                  <DropdownMenuItem className="text-destructive">
-                    Delete category
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              {/* Category Actions */}
+              <CategoryActions
+                categoryId={category.id}
+                categoryName={category.name}
+              />
             </CardContent>
           </Card>
         );
