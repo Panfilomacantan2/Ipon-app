@@ -1,29 +1,10 @@
-import {
-  CalendarDays,
-  MoreHorizontal,
-  PiggyBank,
-  Target,
-  Trophy,
-} from "lucide-react";
+import { CalendarDays, PiggyBank, Target, Trophy } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddGoalDialog } from "@/components/add-goal-dialog";
 import { createClient } from "@/lib/supabase/server";
+import { GoalActions } from "@/components/goals-action";
 
 function formatCurrency(amount: number) {
   return new Intl.NumberFormat("en-PH", {
@@ -93,9 +74,7 @@ export default async function GoalsPage() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">
-            Savings Goals
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight">Savings Goals</h1>
 
           <p className="mt-1 text-sm text-muted-foreground">
             Set targets, track your progress, and achieve your financial goals.
@@ -110,17 +89,13 @@ export default async function GoalsPage() {
         {/* Total Saved */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Saved
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Saved</CardTitle>
 
             <PiggyBank className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
 
           <CardContent>
-            <p className="text-2xl font-bold">
-              {formatCurrency(totalSaved)}
-            </p>
+            <p className="text-2xl font-bold">{formatCurrency(totalSaved)}</p>
 
             <p className="mt-1 text-xs text-muted-foreground">
               Across all savings goals
@@ -131,17 +106,13 @@ export default async function GoalsPage() {
         {/* Total Target */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              Total Target
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Total Target</CardTitle>
 
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
 
           <CardContent>
-            <p className="text-2xl font-bold">
-              {formatCurrency(totalTarget)}
-            </p>
+            <p className="text-2xl font-bold">{formatCurrency(totalTarget)}</p>
 
             <p className="mt-1 text-xs text-muted-foreground">
               Combined target amount
@@ -160,9 +131,7 @@ export default async function GoalsPage() {
           </CardHeader>
 
           <CardContent>
-            <p className="text-2xl font-bold">
-              {completedGoals}
-            </p>
+            <p className="text-2xl font-bold">{completedGoals}</p>
 
             <p className="mt-1 text-xs text-muted-foreground">
               Goals you've achieved
@@ -174,9 +143,7 @@ export default async function GoalsPage() {
       {/* Goals */}
       <section className="space-y-4">
         <div>
-          <h2 className="text-lg font-semibold">
-            Your Goals
-          </h2>
+          <h2 className="text-lg font-semibold">Your Goals</h2>
 
           <p className="text-sm text-muted-foreground">
             Track your progress toward each financial goal.
@@ -192,15 +159,9 @@ export default async function GoalsPage() {
 
               const targetAmount = Number(goal.target_amount);
 
-              const progress = calculateProgress(
-                currentAmount,
-                targetAmount,
-              );
+              const progress = calculateProgress(currentAmount, targetAmount);
 
-              const remaining = Math.max(
-                targetAmount - currentAmount,
-                0,
-              );
+              const remaining = Math.max(targetAmount - currentAmount, 0);
 
               return (
                 <Card
@@ -236,37 +197,8 @@ export default async function GoalsPage() {
                         </div>
                       </div>
 
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                          >
-                            <MoreHorizontal className="h-4 w-4" />
-
-                            <span className="sr-only">
-                              Goal actions
-                            </span>
-                          </Button>
-                        </DropdownMenuTrigger>
-
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>
-                            Edit goal
-                          </DropdownMenuItem>
-
-                          <DropdownMenuItem>
-                            Add savings
-                          </DropdownMenuItem>
-
-                          <DropdownMenuSeparator />
-
-                          <DropdownMenuItem className="text-destructive">
-                            Delete goal
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      {/* Goal Actions */}
+                      <GoalActions goalId={goal.id} goalName={goal.name}/>
                     </div>
 
                     {goal.description && (
@@ -317,9 +249,7 @@ export default async function GoalsPage() {
                       <div className="flex items-center gap-1 text-muted-foreground">
                         <CalendarDays className="h-3.5 w-3.5" />
 
-                        <span>
-                          {formatDate(goal.target_date)}
-                        </span>
+                        <span>{formatDate(goal.target_date)}</span>
                       </div>
                     </div>
                   </CardContent>
@@ -337,13 +267,10 @@ export default async function GoalsPage() {
                 <Target className="h-6 w-6" />
               </div>
 
-              <h3 className="mt-4 font-semibold">
-                No savings goals yet
-              </h3>
+              <h3 className="mt-4 font-semibold">No savings goals yet</h3>
 
               <p className="mt-1 max-w-sm text-sm text-muted-foreground">
-                Create your first savings goal and start working
-                toward it.
+                Create your first savings goal and start working toward it.
               </p>
 
               <div className="mt-5">

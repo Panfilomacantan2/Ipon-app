@@ -49,3 +49,40 @@ export async function createGoal(
     data,
   };
 }
+
+export async function deleteGoal(goalId: string) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+  }
+
+  const { error } = await supabase
+    .from("goals")
+    .delete()
+    .eq("id", goalId)
+    .eq("user_id", user.id);
+
+  if (error) {
+    console.error("Failed to delete goal:", error);
+
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+
+  revalidatePath("/(dashboard)/goals");
+
+  return {
+    success: true,
+    error: "",
+  };
+}

@@ -6,7 +6,7 @@ import {
   Target,
   Settings,
   PiggyBank,
-  ChartBar
+  ChartBar,
 } from "lucide-react";
 
 import {
