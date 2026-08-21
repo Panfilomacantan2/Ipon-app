@@ -14,23 +14,38 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { deleteGoal } from "@/lib/actions/goal.action";
+import { deleteGoal, contributeGoal } from "@/lib/actions/goal.action";
 import { ConfirmDialog } from "./confirm-dialog";
+import { ContributeGoalDialog } from "./contribution-goal-dialog";
 
 type GoalActionsProps = {
-  goalId: string;
-  goalName: string;
+  goal: {
+    id: string;
+    name: string;
+    target_amount: number;
+    current_amount: number;
+    status: "active" | "completed";
+    created_at: string;
+    user_id: string;
+  };
+  account: {
+    id: string;
+    name: string;
+    balance: number;
+    user_id: string;
+  } | null;
 };
 
-export function GoalActions({ goalId, goalName }: GoalActionsProps) {
+export function GoalActions({ goal, account }: GoalActionsProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [contributionOpen, setContributionOpen] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
 
     try {
-      const result = await deleteGoal(goalId);
+      const result = await deleteGoal(goal.id);
 
       if (!result.success) {
         toast.error("Failed to delete goal", {
@@ -41,7 +56,7 @@ export function GoalActions({ goalId, goalName }: GoalActionsProps) {
       }
 
       toast.success("Goal deleted", {
-        description: `${goalName} has been deleted.`,
+        description: `${goal.name} has been deleted.`,
       });
 
       setDeleteOpen(false);
@@ -70,7 +85,14 @@ export function GoalActions({ goalId, goalName }: GoalActionsProps) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem>Edit goal</DropdownMenuItem>
 
-          <DropdownMenuItem>Add savings</DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => {
+              setContributionOpen(true);
+              console.log("hello world");
+            }}
+          >
+            Add savings
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
@@ -85,11 +107,20 @@ export function GoalActions({ goalId, goalName }: GoalActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {/* Contribute Dialog />*/}
+      <ContributeGoalDialog
+        open={contributionOpen}
+        onOpenChange={setContributionOpen}
+        goal={goal}
+        account={account}
+        contributeAction={contributeGoal}
+      />
+
       {/* Confirmation Dialog */}
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
-        title={`Delete "${goalName}"?`}
+        title={`Delete "${goal.name}"?`}
         description="This action cannot be undone. This will permanently delete this savings goal."
         confirmText="Delete"
         loading={deleting}

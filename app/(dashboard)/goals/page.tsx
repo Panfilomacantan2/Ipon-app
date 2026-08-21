@@ -13,12 +13,6 @@ function formatCurrency(amount: number) {
   }).format(amount);
 }
 
-function calculateProgress(current: number, target: number) {
-  if (target <= 0) return 0;
-
-  return Math.min(Math.round((current / target) * 100), 100);
-}
-
 function formatDate(date: string) {
   return new Intl.DateTimeFormat("en-PH", {
     month: "short",
@@ -26,6 +20,8 @@ function formatDate(date: string) {
     year: "numeric",
   }).format(new Date(date));
 }
+
+// todo: FIX the computation and display to UI
 
 export default async function GoalsPage() {
   const supabase = await createClient();
@@ -39,14 +35,21 @@ export default async function GoalsPage() {
     return null;
   }
 
-  // Get current user's goals
-  const { data: goals, error } = await supabase
-    .from("goals")
+  // Get current user's account
+  const { data: account } = await supabase
+    .from("accounts")
     .select("*")
     .eq("user_id", user.id)
-    .order("created_at", {
-      ascending: true,
-    });
+    .single();
+
+  // Get the goal summary for the current user
+  const { data: goals, error } = await supabase
+    .from("goal_summary")
+    .select("*")
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
+
+  console.log(goals);
 
   if (error) {
     console.error("Failed to fetch goals:", error);
@@ -61,13 +64,17 @@ export default async function GoalsPage() {
     0,
   );
 
-  // For now, current saved amount is 0.
-  // Later this should come from savings/transactions.
-  const totalSaved = 0;
-
+  //  Get all the total saved
+  const totalSaved = goalsList.reduce(
+    (total, goal) => total + Number(goal.total_contribution),
+    0,
+  );
+// Get all the completed goals
   const completedGoals = goalsList.filter(
     (goal) => goal.status === "completed",
   ).length;
+
+  console.log(completedGoals)
 
   return (
     <div className="space-y-8">
@@ -134,7 +141,7 @@ export default async function GoalsPage() {
             <p className="text-2xl font-bold">{completedGoals}</p>
 
             <p className="mt-1 text-xs text-muted-foreground">
-              Goals you've achieved
+              Goals you&apos;ve achieved
             </p>
           </CardContent>
         </Card>
@@ -153,16 +160,6 @@ export default async function GoalsPage() {
         {goalsList.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {goalsList.map((goal) => {
-              // Temporary current amount.
-              // Later calculate this from transactions.
-              const currentAmount = 0;
-
-              const targetAmount = Number(goal.target_amount);
-
-              const progress = calculateProgress(currentAmount, targetAmount);
-
-              const remaining = Math.max(targetAmount - currentAmount, 0);
-
               return (
                 <Card
                   key={goal.id}
@@ -198,7 +195,7 @@ export default async function GoalsPage() {
                       </div>
 
                       {/* Goal Actions */}
-                      <GoalActions goalId={goal.id} goalName={goal.name} />
+                      <GoalActions goal={goal} account={account} />
                     </div>
 
                     {goal.description && (
@@ -214,16 +211,16 @@ export default async function GoalsPage() {
                       <div className="flex items-end justify-between gap-2">
                         <div>
                           <p className="text-2xl font-bold">
-                            {formatCurrency(currentAmount)}
+                            {formatCurrency(goal.total_contribution)}
                           </p>
 
                           <p className="text-xs text-muted-foreground">
-                            of {formatCurrency(targetAmount)}
+                            of {formatCurrency(goal.target_amount)}
                           </p>
                         </div>
 
                         <span className="text-sm font-semibold">
-                          {progress}%
+                          {Math.round(goal.progress)}%
                         </span>
                       </div>
 
@@ -232,7 +229,7 @@ export default async function GoalsPage() {
                         <div
                           className="h-full rounded-full bg-primary transition-all"
                           style={{
-                            width: `${progress}%`,
+                            width: `${goal.progress}%`,
                           }}
                         />
                       </div>
@@ -241,8 +238,8 @@ export default async function GoalsPage() {
                     {/* Remaining */}
                     <div className="flex items-center justify-between text-sm">
                       <span className="text-muted-foreground">
-                        {remaining > 0
-                          ? `${formatCurrency(remaining)} remaining`
+                        {goal.remaining > 0
+                          ? `${formatCurrency(goal.remaining)} remaining`
                           : "Goal completed"}
                       </span>
 
