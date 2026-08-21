@@ -57,8 +57,7 @@ export function AddGoalDialog() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
-          <Plus className="mr-2 h-4 w-4" />
-          Add Goal
+          <Plus className="h-4 w-4" />Add Goal
         </Button>
       </DialogTrigger>
 
