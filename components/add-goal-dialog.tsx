@@ -19,6 +19,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { createGoal } from "@/lib/actions/goal.action";
 import { toast } from "sonner";
+import { ActionState, GoalActionState } from "@/lib/types/action.type";
 
 const initialState = {
   success: false,
@@ -30,7 +31,7 @@ const MAX_LENGTH = 100;
 export function AddGoalDialog() {
   const [open, setOpen] = useState(false);
 
-  const [state, formAction, pending] = useActionState(createGoal, initialState);
+  const [state, formAction, pending] = useActionState<GoalActionState>(createGoal, initialState);
   const formRef = useRef<HTMLFormElement>(null);
   const [value, setValue] = useState("");
 

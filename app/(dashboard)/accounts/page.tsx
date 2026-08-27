@@ -2,21 +2,11 @@ import {
   Wallet,
   Landmark,
   CreditCard,
-  Banknote,
-  MoreHorizontal,
+
 } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { AddAccountDialog } from "@/components/add-account-dialog";
 import { createClient } from "@/lib/supabase/server";
 import { AcountActions } from "@/components/account-action";
@@ -148,7 +138,6 @@ export default async function AccountsPage() {
         {/* Account Grid */}
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {accountList.map((account) => {
-            const Icon = account.icon;
             const isNegative = account.initail_balance < 0;
 
             return (
@@ -174,7 +163,7 @@ export default async function AccountsPage() {
                   </div>
                     
                   {/* Acount Actions */}
-                  <AcountActions acountId={account.id} acountName={account.name}/>
+                  <AcountActions acountId={account.id} acountName={account.name} account={account}/>
                 </CardHeader>
 
                 <CardContent>

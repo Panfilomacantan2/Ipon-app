@@ -14,14 +14,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { deleteCategory } from "@/lib/actions/category.action";
-import { ConfirmDialog } from "./confirm-dialog";
+import { ConfirmDialog } from "./delete-confirm-dialog";
 
 type GoalActionsProps = {
   categoryId: string;
   categoryName: string;
 };
 
-export function CategoryActions({ categoryId, categoryName }: GoalActionsProps) {
+export function CategoryActions({
+  categoryId,
+  categoryName,
+}: GoalActionsProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
@@ -96,6 +99,3 @@ export function CategoryActions({ categoryId, categoryName }: GoalActionsProps) 
     </>
   );
 }
-
-
-

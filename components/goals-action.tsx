@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { deleteGoal, contributeGoal } from "@/lib/actions/goal.action";
-import { ConfirmDialog } from "./confirm-dialog";
+import { ConfirmDialog } from "./delete-confirm-dialog";
 import { ContributeGoalDialog } from "./contribution-goal-dialog";
 
 type GoalActionsProps = {

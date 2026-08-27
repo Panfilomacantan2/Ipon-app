@@ -32,7 +32,7 @@ export default async function GoalsPage() {
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
-  console.log(goals);
+  console.log(account, "from goal page ");
 
   if (error) {
     console.error("Failed to fetch goals:", error);

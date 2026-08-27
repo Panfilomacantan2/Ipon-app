@@ -20,6 +20,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AddCategoryDialog } from "@/components/add-category-dialog";
 import { CategoryActions } from "@/components/category-action";
+import { Categories } from "@/lib/types/categories.type";
 
 const iconMap = {
   Utensils,
@@ -63,7 +64,7 @@ export default async function CategoriesPage() {
     console.error("Failed to fetch categories:", error);
   }
 
-  const categoryList = categories ?? [];
+  const categoryList: Categories = categories ?? [];
 
   const incomeCategories = categoryList.filter(
     (category) => category.type === "income",
@@ -195,7 +196,7 @@ export default async function CategoriesPage() {
   );
 }
 
-function CategoryGrid({ categories }: { categories: any[] }) {
+function CategoryGrid({ categories }: { categories: Categories }) {
   if (categories.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center rounded-xl border border-dashed py-16 text-center">

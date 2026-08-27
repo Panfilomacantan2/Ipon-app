@@ -14,18 +14,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { deleteGoal } from "@/lib/actions/goal.action";
-import { ConfirmDialog } from "./confirm-dialog";
+import { ConfirmDialog } from "./delete-confirm-dialog";
 import { deleteAcount } from "@/lib/actions/account.action";
+import { EditConfirmDialog } from "./edit-account-dialog";
 
 type GoalActionsProps = {
   acountId: string;
   acountName: string;
+  account: any[]
 };
 
-export function AcountActions({ acountId, acountName }: GoalActionsProps) {
+export function AcountActions({ acountId, acountName, account }: GoalActionsProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [editing, setEditing] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
@@ -57,6 +60,36 @@ export function AcountActions({ acountId, acountName }: GoalActionsProps) {
     }
   }
 
+  async function handleEdit(prevState, formData) {
+    setEditing(true);
+
+    try {
+      const result = await updateAccount(acountId, formData);
+
+      if (!result.success) {
+        toast.error("Failed to update account", {
+          description: result.error,
+        });
+
+        return;
+      }
+
+      toast.success("Account updated", {
+        description: `${acountName} has been updated.`,
+      });
+
+      setEditOpen(false);
+    } catch (error) {
+      console.error(error);
+
+      toast.error("Something went wrong", {
+        description: "Failed to update the account.",
+      });
+    } finally {
+      setEditing(false);
+    }
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -69,9 +102,14 @@ export function AcountActions({ acountId, acountName }: GoalActionsProps) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Edit acount</DropdownMenuItem>
-
-          <DropdownMenuItem>Add savings</DropdownMenuItem>
+          <DropdownMenuItem
+            className=""
+            onSelect={() => {
+              setEditOpen(true);
+            }}
+          >
+            Edit acount
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
@@ -86,19 +124,28 @@ export function AcountActions({ acountId, acountName }: GoalActionsProps) {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Confirmation Dialog */}
+      {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         open={deleteOpen}
         onOpenChange={setDeleteOpen}
         title={`Delete "${acountName}"?`}
-        description="This action cannot be undone. This will permanently delete this savings goal."
+        description="This action cannot be undone. This will permanently delete this account."
         confirmText="Delete"
         loading={deleting}
         onConfirm={handleDelete}
       />
+
+      {/* Edit Confirmation Dialog */}
+      <EditConfirmDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        title={`Edit "${acountName}"?`}
+        description="This action cannot be undone. This will permanently delete this account."
+        confirmText="Delete"
+        loading={deleting}
+        // onConfirm={handleEdit}
+        account={account}
+      />
     </>
   );
 }
-
-
-

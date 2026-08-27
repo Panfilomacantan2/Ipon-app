@@ -14,16 +14,12 @@ import {
 type ConfirmDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-
   title: string;
   description: string;
-
   confirmText?: string;
   cancelText?: string;
-
   loading?: boolean;
-
-  onConfirm: () => void;
+  onConfirm?: () => void;
 };
 
 export function ConfirmDialog({

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "../supabase/server";
+import { GoalActionState } from "../types/action.type";
 
 export async function createGoal(
   _previousState: GoalActionState,
@@ -17,6 +18,7 @@ export async function createGoal(
     return {
       success: false,
       error: "Unauthorized",
+      data: null,
     };
   }
 
@@ -38,6 +40,7 @@ export async function createGoal(
     return {
       success: false,
       error: error.message,
+      data: null,
     };
   }
 
@@ -45,15 +48,15 @@ export async function createGoal(
 
   return {
     success: true,
-    error: "",
+    error: null,
     data,
   };
 }
 
 export async function contributeGoal(
-  _previousState: { success: boolean; error?: string; message?: string },
+  _previousState: GoalActionState,
   formData: FormData,
-): Promise<{ success: boolean; error?: string; message?: string }> {
+): Promise<GoalActionState> {
   const supabase = await createClient();
 
   const {
@@ -61,7 +64,7 @@ export async function contributeGoal(
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { success: false, error: "Unauthorized" };
+    return { success: false, error: "Unauthorized", data: null };
   }
 
   const goalId = formData.get("goal_id") as string;
@@ -80,7 +83,11 @@ export async function contributeGoal(
 
   revalidatePath("/(dashboard)/goals");
 
-  return { success: true, message: "Contribution added successfully." };
+  return {
+    success: true,
+    error: null,
+    message: "Contribution added successfully.",
+  };
 }
 
 export async function deleteGoal(goalId: string) {
@@ -94,6 +101,7 @@ export async function deleteGoal(goalId: string) {
     return {
       success: false,
       error: "Unauthorized",
+      data: null,
     };
   }
 
@@ -109,6 +117,7 @@ export async function deleteGoal(goalId: string) {
     return {
       success: false,
       error: error.message,
+      data: null,
     };
   }
 
@@ -121,7 +130,7 @@ export async function deleteGoal(goalId: string) {
 }
 
 export async function addContributionGoal(
-  _previousState: { success: boolean; error?: string; message?: string },
+  _previousState: GoalActionState,
   formData: FormData,
 ) {
   const supabase = await createClient();
@@ -134,6 +143,7 @@ export async function addContributionGoal(
     return {
       success: false,
       error: "Unauthorized",
+      data: null,
     };
   }
 
@@ -150,11 +160,12 @@ export async function addContributionGoal(
   });
 
   if (error) {
-    console.error("Failed to delete goal:", error);
+    console.error("Failed to add contribution:", error);
 
     return {
       success: false,
       error: error.message,
+      data: null,
     };
   }
 
@@ -163,5 +174,7 @@ export async function addContributionGoal(
   return {
     success: true,
     error: "",
+    message: "Contribution added successfully.",
+    data: null,
   };
 }

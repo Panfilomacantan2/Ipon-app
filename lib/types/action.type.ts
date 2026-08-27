@@ -1,3 +1,13 @@
+export type ActionState<T = null> = {
+  success: boolean;
+  error: string | null;
+  message?: string;
+  data?: T;
+};
+
+export type GoalActionState = ActionState<null>;
+
+
 export type AccountActionState = {
   success: boolean;
   error: string;
@@ -6,8 +16,6 @@ export type AccountActionState = {
     name: string;
   };
 };
-
-
 
 export type CategoryActionState = {
   success: boolean;

@@ -55,8 +55,6 @@ export async function createAccount(
   };
 }
 
-
-
 export async function deleteAcount(accountId: string) {
   const supabase = await createClient();
 
@@ -91,5 +89,54 @@ export async function deleteAcount(accountId: string) {
   return {
     success: true,
     error: "",
+  };
+}
+
+export async function editAccount(_previousState: null, formData: FormData) {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      error: "Unauthorized",
+    };
+  }
+
+  const name = formData.get("name") as string;
+  const type = formData.get("type") as string;
+  const currency = formData.get("currency") as string;
+  const initial_balance = Number(formData.get("balance")) || 0;
+  const description = formData.get("description") as string;
+
+  const { data, error } = await supabase
+    .from("accounts")
+    .update({
+      name,
+      type,
+      currency,
+      initial_balance,
+      description,
+    })
+    .eq("id", formData.get("id"))
+    .select()
+    .single();
+
+  if (error) {
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+
+  revalidatePath("/(dashboard)/accounts");
+
+  return {
+    success: true,
+    error: "",
+    data,
   };
 }

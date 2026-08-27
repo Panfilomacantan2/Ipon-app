@@ -1,23 +1,23 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "./ui/badge";
 import { CalendarDays, Target, Trophy } from "lucide-react";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { AddGoalDialog } from "./add-goal-dialog";
 import { GoalActions } from "./goals-action";
+import { GoalSummary } from "@/lib/types/goal.types";
 
-export function GoalTabs({ goals, account }) {
+type GoalActionProps = {
+  goals: GoalSummary[];
+  account: any[];
+};
+
+export function GoalTabs({ goals, account }: GoalActionProps) {
   const activeGoals = goals.filter((goal) => goal.status === "active");
   const completedGoals = goals.filter((goal) => goal.status === "completed");
   const cancelledGoals = goals.filter((goal) => goal.status === "cancelled");
 
-  console.log(goals);
+  console.log(" from goal tabs", account);
 
   return (
     <Tabs defaultValue="active" className="w-full">
@@ -52,16 +52,9 @@ export function GoalTabs({ goals, account }) {
       </TabsContent>
     </Tabs>
   );
-  account = { account };
 }
 
-function GoalGrid({
-  categories,
-  account,
-}: {
-  categories: any[];
-  account: any[];
-}) {
+function GoalGrid({ categories, account }: { categories: GoalSummary[], account: any }) {
   if (categories.length === 0) {
     return (
       <Card>
