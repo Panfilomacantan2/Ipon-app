@@ -1,9 +1,4 @@
-import {
-  Wallet,
-  Landmark,
-  CreditCard,
-
-} from "lucide-react";
+import { Wallet, Landmark, CreditCard } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -17,8 +12,6 @@ function formatCurrency(amount: number) {
     currency: "PHP",
   }).format(amount);
 }
-
-
 
 export default async function AccountsPage() {
   const supabase = await createClient();
@@ -35,7 +28,8 @@ export default async function AccountsPage() {
   const { data: accounts, error } = await supabase
     .from("accounts")
     .select("*")
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .order("created_at", { ascending: false });
 
   if (error) {
     console.log(error);
@@ -161,9 +155,13 @@ export default async function AccountsPage() {
                       </Badge>
                     </div>
                   </div>
-                    
+
                   {/* Acount Actions */}
-                  <AcountActions acountId={account.id} acountName={account.name} account={account}/>
+                  <AcountActions
+                    acountId={account.id}
+                    acountName={account.name}
+                    account={account}
+                  />
                 </CardHeader>
 
                 <CardContent>

@@ -92,7 +92,7 @@ export async function deleteAcount(accountId: string) {
   };
 }
 
-export async function editAccount(_previousState: null, formData: FormData) {
+export async function editAccount(_previousState: AccountActionState, formData: FormData) {
   const supabase = await createClient();
 
   const {
@@ -123,7 +123,7 @@ export async function editAccount(_previousState: null, formData: FormData) {
     })
     .eq("id", formData.get("id"))
     .select()
-    .single();
+    .order("created_at", { ascending: false });
 
   if (error) {
     return {

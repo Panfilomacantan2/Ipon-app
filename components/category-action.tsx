@@ -15,18 +15,32 @@ import {
 
 import { deleteCategory } from "@/lib/actions/category.action";
 import { ConfirmDialog } from "./delete-confirm-dialog";
+import { EditConfirmDialog } from "./edit-category-dialog";
+
+type Category = {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  type: "income" | "expense";
+  user_id: string;
+  created_at: string;
+};
 
 type GoalActionsProps = {
   categoryId: string;
   categoryName: string;
+  category: Category;
 };
 
 export function CategoryActions({
   categoryId,
   categoryName,
+  category,
 }: GoalActionsProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
@@ -69,9 +83,13 @@ export function CategoryActions({
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Edit acount</DropdownMenuItem>
-
-          <DropdownMenuItem>Add savings</DropdownMenuItem>
+          <DropdownMenuItem
+            onSelect={() => {
+              setEditOpen(true);
+            }}
+          >
+            Edit category
+          </DropdownMenuItem>
 
           <DropdownMenuSeparator />
 
@@ -95,6 +113,18 @@ export function CategoryActions({
         confirmText="Delete"
         loading={deleting}
         onConfirm={handleDelete}
+      />
+
+      {/* Edit Dialog */}
+      <EditConfirmDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        title={`Delete "${categoryName}"?`}
+        description="This action cannot be undone. This will permanently delete this savings goal."
+        confirmText="Delete"
+        loading={deleting}
+        onConfirm={handleDelete}
+        category={category}
       />
     </>
   );

@@ -18,17 +18,29 @@ import { ConfirmDialog } from "./delete-confirm-dialog";
 import { deleteAcount } from "@/lib/actions/account.action";
 import { EditConfirmDialog } from "./edit-account-dialog";
 
+type Account = {
+  id: string;
+  name: string;
+  type: string;
+  currency: string;
+  initial_balance: number;
+  description: string;
+};
+
 type GoalActionsProps = {
   acountId: string;
   acountName: string;
-  account: any[]
+  account: Account;
 };
 
-export function AcountActions({ acountId, acountName, account }: GoalActionsProps) {
+export function AcountActions({
+  acountId,
+  acountName,
+  account,
+}: GoalActionsProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
-  const [editing, setEditing] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
@@ -60,36 +72,6 @@ export function AcountActions({ acountId, acountName, account }: GoalActionsProp
     }
   }
 
-  async function handleEdit(prevState, formData) {
-    setEditing(true);
-
-    try {
-      const result = await updateAccount(acountId, formData);
-
-      if (!result.success) {
-        toast.error("Failed to update account", {
-          description: result.error,
-        });
-
-        return;
-      }
-
-      toast.success("Account updated", {
-        description: `${acountName} has been updated.`,
-      });
-
-      setEditOpen(false);
-    } catch (error) {
-      console.error(error);
-
-      toast.error("Something went wrong", {
-        description: "Failed to update the account.",
-      });
-    } finally {
-      setEditing(false);
-    }
-  }
-
   return (
     <>
       <DropdownMenu>
@@ -108,7 +90,7 @@ export function AcountActions({ acountId, acountName, account }: GoalActionsProp
               setEditOpen(true);
             }}
           >
-            Edit acount
+            Edit account
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />

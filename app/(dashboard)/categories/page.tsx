@@ -252,6 +252,7 @@ function CategoryGrid({ categories }: { categories: Categories }) {
               <CategoryActions
                 categoryId={category.id}
                 categoryName={category.name}
+                category={category}
               />
             </CardContent>
           </Card>
