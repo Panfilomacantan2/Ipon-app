@@ -17,6 +17,7 @@ import {
 import { deleteGoal, contributeGoal } from "@/lib/actions/goal.action";
 import { ConfirmDialog } from "./delete-confirm-dialog";
 import { ContributeGoalDialog } from "./contribution-goal-dialog";
+import { EditGoalDialog } from "./edit-goal-dialog";
 
 type GoalActionsProps = {
   goal: {
@@ -40,6 +41,7 @@ export function GoalActions({ goal, account }: GoalActionsProps) {
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [contributionOpen, setContributionOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   async function handleDelete() {
     setDeleting(true);
@@ -83,7 +85,9 @@ export function GoalActions({ goal, account }: GoalActionsProps) {
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Edit goal</DropdownMenuItem>
+          <DropdownMenuItem onSelect={() => setEditOpen(true)}>
+            Edit goal
+          </DropdownMenuItem>
 
           <DropdownMenuItem
             onSelect={() => {
@@ -126,6 +130,9 @@ export function GoalActions({ goal, account }: GoalActionsProps) {
         loading={deleting}
         onConfirm={handleDelete}
       />
+
+      {/* Confirmation Dialog */}
+      <EditGoalDialog open={editOpen} onOpenChange={setEditOpen} goal={goal}/>
     </>
   );
 }

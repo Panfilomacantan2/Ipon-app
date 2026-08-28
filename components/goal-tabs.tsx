@@ -54,7 +54,13 @@ export function GoalTabs({ goals, account }: GoalActionProps) {
   );
 }
 
-function GoalGrid({ categories, account }: { categories: GoalSummary[], account: any }) {
+function GoalGrid({
+  categories,
+  account,
+}: {
+  categories: GoalSummary[];
+  account: any;
+}) {
   if (categories.length === 0) {
     return (
       <Card>
@@ -108,7 +114,9 @@ function GoalGrid({ categories, account }: { categories: GoalSummary[], account:
                 </div>
 
                 {/* Goal Actions */}
-                <GoalActions goal={goal} account={account} />
+                {goal.status !== "completed" && (
+                  <GoalActions goal={goal} account={account} />
+                )}
               </div>
 
               {goal.description && (

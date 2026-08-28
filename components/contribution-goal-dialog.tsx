@@ -77,6 +77,9 @@ export function ContributeGoalDialog({
       ? Math.min((goal.current_amount / goal.target_amount) * 100, 100)
       : 0;
 
+      console.log(goal)
+
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -93,16 +96,16 @@ export function ContributeGoalDialog({
             <div>
               <p className="text-sm font-medium">{goal.name}</p>
               <p className="text-sm text-muted-foreground">
-                ₱{0} of ₱{goal.target_amount.toLocaleString()}
+                ₱{goal.total_contribution} of ₱{goal.target_amount.toLocaleString()}
               </p>
             </div>
             <span className="text-sm font-semibold">
-              {Math.round(progress)}%
+              {Math.round(goal.progress)}%
             </span>
           </div>
-          <Progress value={progress} className="mt-3" />
+          <Progress value={goal.progress} className="mt-3" />
           <p className="mt-2 text-xs text-muted-foreground">
-            ₱{remaining.toLocaleString()} remaining
+            ₱{goal.remaining} remaining
           </p>
         </div>
 

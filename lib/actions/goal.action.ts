@@ -178,3 +178,63 @@ export async function addContributionGoal(
     data: null,
   };
 }
+
+
+export async function updateGoal(
+  _previousState: GoalActionState,
+  formData: FormData,
+): Promise<GoalActionState> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      error: "Unauthorized",
+      data: null,
+    };
+  }
+
+  const goalId = formData.get("goal_id") as string;
+  const name = formData.get("name") as string;
+  const description = formData.get("description") as string;
+  const targetAmount = Number(formData.get("target_amount"));
+  const targetDate = formData.get("target_date") as string;
+  const status = formData.get("status") as string;
+
+  console.log(formData)
+
+  const { data, error } = await supabase
+    .from("goals")
+    .update({
+      name,
+      description,
+      target_amount: targetAmount,
+      target_date: targetDate,
+      status
+    })
+    .eq("id", goalId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error("Update goal error:", error);
+
+    return {
+      success: false,
+      error: error.message,
+      data: null,
+    };
+  }
+
+  revalidatePath("/(dashboard)/goals");
+
+  return {
+    success: true,
+    error: null,
+    data,
+  };
+}
