@@ -129,21 +129,17 @@ export function EditConfirmDialog({
             <div className="space-y-2">
               <Label>Account currency</Label>
 
-              <Select name="currency" defaultValue={account.currency} required>
+              <Select defaultValue="PHP" disabled>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select currency" />
+                  <SelectValue />
                 </SelectTrigger>
 
                 <SelectContent>
                   <SelectItem value="PHP">Philippine Peso (₱)</SelectItem>
-
-                  <SelectItem value="USD">US Dollar ($)</SelectItem>
-
-                  <SelectItem value="EUR">Euro (€)</SelectItem>
-
-                  <SelectItem value="GBP">British Pound (£)</SelectItem>
                 </SelectContent>
               </Select>
+
+              <input type="hidden" name="currency" value="PHP" />
             </div>
           </div>
 
