@@ -40,9 +40,23 @@ export async function createAccount(
     .single();
 
   if (error) {
+    console.error("Create account error:", error);
+
+    if (error.code === "23505") {
+      return {
+        success: false,
+        error: "DUPLICATE_ACCOUNT_NAME",
+        data: null,
+        timestamp: new Date().toISOString(),
+      };
+    }
+
     return {
       success: false,
+      // error: "CREATE_ACCOUNT_FAILED",
       error: error.message,
+      data: null,
+      timestamp: new Date().toISOString(),
     };
   }
 
@@ -52,6 +66,7 @@ export async function createAccount(
     success: true,
     error: "",
     data,
+    timestamp: new Date().toISOString(),
   };
 }
 
@@ -92,7 +107,10 @@ export async function deleteAcount(accountId: string) {
   };
 }
 
-export async function editAccount(_previousState: AccountActionState, formData: FormData) {
+export async function editAccount(
+  _previousState: AccountActionState,
+  formData: FormData,
+) {
   const supabase = await createClient();
 
   const {

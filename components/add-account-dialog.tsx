@@ -32,25 +32,37 @@ import { AccountActionState } from "@/lib/types/action.type";
 const initialState: AccountActionState = {
   success: false,
   error: "",
+  data: {
+    id: "",
+    name: "",
+  },
+  timestamp: new Date().toISOString(),
 };
 
 export function AddAccountDialog() {
-  const [state, formAction, pending] = useActionState(
-    createAccount,
-    initialState,
-  );
+  const [state, formAction] = useActionState(createAccount, initialState);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!state.data) return;
+    if (state.error) {
+      if (state.error === "DUPLICATE_ACCOUNT_NAME") {
+        toast.error("Account name already exists", {
+          description: "Please choose a different account name.",
+        });
+      } else {
+        toast.error(state.error);
+      }
 
-    toast.success("Account created", {
-      description: "Your account has been successfully created.",
-    });
+      return;
+    }
 
-    console.log("action state: ", state.data);
-    setOpen(false);
-  }, [state.data, state.success]);
+    if (state.success) {
+      console.log("action state:", state.data);
+
+      toast.success("Account created successfully.");
+      setOpen(false);
+    }
+  }, [state.timestamp, state.error, state.success, state.data]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -113,21 +125,17 @@ export function AddAccountDialog() {
             <div className="space-y-2">
               <Label>Account currency</Label>
 
-              <Select name="currency" required>
+              <Select defaultValue="PHP" disabled>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select currency" />
+                  <SelectValue />
                 </SelectTrigger>
 
                 <SelectContent>
                   <SelectItem value="PHP">Philippine Peso (₱)</SelectItem>
-
-                  <SelectItem value="USD">US Dollar ($)</SelectItem>
-
-                  <SelectItem value="EUR">Euro (€)</SelectItem>
-
-                  <SelectItem value="GBP">British Pound (£)</SelectItem>
                 </SelectContent>
               </Select>
+
+              <input type="hidden" name="currency" value="PHP" />
             </div>
           </div>
 
