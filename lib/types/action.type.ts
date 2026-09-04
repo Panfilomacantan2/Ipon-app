@@ -11,7 +11,8 @@ export type GoalActionState = ActionState<null>;
 export type AccountActionState = {
   success: boolean;
   error: string;
-  data?: {
+  timestamp: string;
+  data: {
     id: string;
     name: string;
   };
